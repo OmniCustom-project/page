@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Sync audio-video customization aims to synchronously customize both video identity and audio timbre">
+  <meta name="keywords" content="Sync Audio-Video Customization, Joint Audio-Video Generation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OmniCustom: Sync Audio-Video Customization Via Joint Audio-Video Generation Model</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/icon.jpg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+<script>
+  MathJax = {
+    options: {
+      // 跳过这些 HTML 标签的内部解析（防止冲突）
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      processEnvironments: false,
+      processEscapes: true        // 确保此项为 true
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a> -->
+
+<!--       <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div> -->
+<!--     </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">OmniCustom: Sync Audio-Video Customization Via Joint Audio-Video Generation Model</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=ym_t6QYAAAAJ">Maomao Li</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=aKvi_rEAAAAJ&hl=zh-CN">Zhen Li</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://kpzhang93.github.io/">Kaipeng Zhang</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=HAE6EtkAAAAJ&hl=en">Guosheng Yin</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://scholar.google.com.hk/citations?hl=zh-CN&user=VTrRNN4AAAAJ">Zhifeng Li</a><sup>3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://scholar.google.com.hk/citations?user=7Hdu5k4AAAAJ&hl=zh-CN&oi=ao">Dong Xu</a><sup>1</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>The University of Hong Kong</span> &emsp;
+            <span class="author-block"><sup>2</sup>Shanda AI Research Tokyo</span> &emsp;
+            <span class="author-block"><sup>3</sup>Tencent</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+            <!--   <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span> -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+    <!--           <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/google/nerfies"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Teaser video-->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="publication-video">
+            <!-- Youtube embed code here -->
+            <iframe src="https://www.youtube.com/embed/ubVrLa6CfJo?si=pjOWPWfMMaqWyWC3" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          </div>
+      <h2 class="subtitle has-text-centered">
+       Video Demo for OmniCustom, a novel sync audio-video customization framework.
+      </h2>
+    </div>
+  </div>
+</section>
+<!-- End teaser video -->
+
+
+
+<!-- Teaser 部分 - 完整适配Art Gallery样式 -->
+<section class="hero teaser">
+  <div class="container is-max-widescreen">
+    <div class="hero-body">
+      <!-- 在teaser上方插入图片 -->
+      <div class="has-text-centered" style="margin-bottom: 2rem;">
+        <img src="./static/images/teaser.png" alt="OmniCustom Overview" class="img-responsive" style="max-width: 100%; height: auto; border-radius: 10px;">
+      </div>
+
+      <h2 class="subtitle has-text-justified">
+        <p>
+          Fig 1: We propose OmniCustom, a novel framework to deal with sync audio-video customization. Given a reference image $I^{r}$ and a reference audio $A^{r}$, the framework synchronously generates a video that preserves the visual identity from $I^{r}$ and an audio track that mimics the timbre of $A^{r}$. Here, the speech content can be freely specified through a textual prompt, where we use &lt;S&gt; and &lt;E&gt; to mark the start and end of a speech.
+        </p>
+      </h2>
+
+      <!-- 四元素一行展示区 - 完全适配Art Gallery样式：flex布局+380px高度+0.7:0.7:0.7:1.2比例 -->
+      <div style="width: 100%; margin: 0 auto; padding: 10px 0; box-sizing: border-box;">
+        <!-- 第一组示例 -->
+        <div style="width: 100%; max-width: 1280px; margin: 0 auto 30px auto; display: flex; gap: 14px; box-sizing: border-box;">
+          <!-- 1. 参考图像 -->
+          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+              <img src="./static/ref_images/teaser_ref1.png" alt="ref img 1" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">
+            </div>
+          </div>
+
+          <!-- 2. 参考音频 -->
+          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+              <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px; box-sizing: border-box;">
+                <audio controls style="width: 90%; height: 60px; border-radius: 6px;">
+                  <source src="./static/ref_audio/00029_audio.wav" type="audio/wav">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 文本提示 -->
+          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+              <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A man with an air of intellect holds a book close, examining the pages under the warm glow of a rustic library lamp. The ambient light casts gentle shadows across his focused expression, while a tranquil, scholarly atmosphere envelops the room. Occasionally, he pause to jot down notes in the margins, further immersing himself in the text's rich narratives. He declares warmly, &lt;S&gt;Learning never exhausts the mind.&lt;E&gt;</p>
+            </div>
+          </div>
+
+          <!-- 4. 结果视频 - 保留controls playsinline，无muted -->
+          <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+              <video controls playsinline style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+                <source src="./static/videos/teaser1.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+        <!-- 第一组结束 -->
+
+        <!-- 第2组开始 -->
+        <div style="width: 100%; max-width: 1280px; margin: 0 auto 30px auto; display: flex; gap: 14px; box-sizing: border-box;">
+          <!-- 1. 参考图像 -->
+          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+              <img src="./static/ref_images/teaser_ref2.jpg" alt="ref img 1" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">
+            </div>
+          </div>
+
+          <!-- 2. 参考音频 -->
+          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+              <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px; box-sizing: border-box;">
+                <audio controls style="width: 90%; height: 60px; border-radius: 6px;">
+                  <source src="./static/ref_audio/00058_audio.wav" type="audio/wav">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 文本提示 -->
+          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+              <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A woman stands on the harbour’s edge at twilight, the sails of the Sydney Opera House catching the last apricot glow of sunset. She wears a simple black dress, her hair swept up, and holds a half-finished glass of champagne. The lights of the Harbour Bridge begin to sparkle behind her, and the opera house seems to float on the darkening water, she syas, &lt;S&gt;Some buildings aren't made of stone, but of gathered breath and gathered dreams.&lt;E&gt;</p>
+            </div>
+          </div>
+
+          <!-- 4. 结果视频 -->
+          <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+              <video controls playsinline style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+                <source src="./static/videos/teaser2.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+        <!-- 第二组结束 -->
+
+        <!-- 第三组开始 -->
+        <div style="width: 100%; max-width: 1280px; margin: 0 auto; display: flex; gap: 14px; box-sizing: border-box;">
+          <!-- 1. 参考图像 -->
+          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+              <img src="./static/ref_images/teaser_ref3.png" alt="ref img 1" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">
+            </div>
+          </div>
+
+          <!-- 2. 参考音频 -->
+          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+              <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px; box-sizing: border-box;">
+                <audio controls style="width: 90%; height: 60px; border-radius: 6px;">
+                  <source src="./static/ref_audio/00070_audio.wav" type="audio/wav">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 文本提示 -->
+          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+              <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A man stands on a bustling street in Shanghai, the air thick with the festive atmosphere of Chinese Lunar New Year, with numerous red lanterns hanging in clusters overhead. He blends seamlessly into the vibrant surroundings, then clasps his hands together in a traditional gesture of greeting and says warmly: &lt;S&gt;Wishing everyone a Happy New Year and joy every single day.&lt;E&gt;</p>
+            </div>
+          </div>
+
+          <!-- 4. 结果视频 -->
+          <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
+            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
+            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+              <video controls playsinline style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+                <source src="./static/videos/teaser3.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+        <!-- 第三组结束 -->
+      </div>
+      <!-- 四元素一行展示区结束 -->
+
+    </div>
+    <!-- hero-body 结束 -->
+  </div>
+  <!-- container 结束 -->
+</section>
+<!-- teaser 部分结束 -->
+
+
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-2">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+        Existing mainstream video customization methods focus on generating identity-consistent videos based on given reference images and textual prompts. Benefiting from the rapid advancement of joint audio-video generation, this paper proposes a more compelling new task: <i>sync audio-video customization</i>, which aims to synchronously customize both video identity and audio timbre. Specifically, given a reference image $I^{r}$ and a reference audio $A^{r}$, this novel task requires generating videos that maintain the identity of the reference image while imitating the timbre of the reference audio, with spoken content freely specifiable through user-provided textual prompts. To this end, we propose OmniCustom, a powerful DiT-based audio-video customization framework that can synthesize a video following reference image identity, audio timbre, and text prompts all at once in a zero-shot manner. Our framework is built on three key contributions. First, identity and audio timbre control are achieved through separate reference identity and audio LoRA modules that operate through self-attention layers within the base audio-video generation model. Second, we introduce a contrastive learning objective alongside the standard flow matching objective. It uses predicted flows conditioned on reference inputs as positive examples and those without reference conditions as negative examples, thereby enhancing the model’s ability to preserve identity and timbre. Third, we train OmniCustom on our constructed large-scale, high-quality audio-visual human dataset. Extensive experiments demonstrate that OmniCustom outperforms existing methods in generating audio-video content with consistent identity and timbre fidelity.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+<div style="height: 50px; width: 100%;"></div>
+
+
+<!-- Method Illustration. -->
+<div class="columns is-centered has-text-centered">
+  <div class="column is-full" style="max-width: 95%;">
+    <!-- 核心修改：将is-4改为is-2，和Results标题层级一致 -->
+    <h2 class="title is-2">Method</h2>
+    <img src="./static/images/pipeline.png"
+         class="interpolation-image"
+         style="max-width: 100%; height: auto;"
+         alt="Interpolate start reference image."/>
+    <div class="content has-text-justified">
+          Fig 2: (a) Overview of our OmniCustom architecture. We extend the joint audio-video generation model OVI [1] by introducing reference image and audio branches alongside the original video and audio flows. The visual and audio VAE encoders project the reference image $I^{r}$ and audio $A^{r}$ into tokens, which are then concatenated with the noised video and audio latent tokens, respectively, before being processed by the fusion blocks. Here, the face embeddings [2] and timbre embeddings [3] are also input in fusion blocks for further constraint. (b) Fusion Block. It is designed as a symmetric twin backbone with parallel audio and video branches. Our OmniCustom embraces identity and timbre information via finetuning self-attention layers in video and audio branches, respectively. (c) Reference LoRAs. We incorporate separate LoRA into the QKV projections of the reference identity and audio representations. Specifically, the reference identity LoRA is in the self-attention layers of video branch, whereas the reference audio LoRA is in those of audio branch.  
+        </p>
+      </div>
+    </div>
+    <!--/ Method Illustration. -->
+
+</section>
+
+
+
+
+<!-- 音视频定制展示 - 最终版 | GIF转MP4兼容+完整显示+无裁剪 + Typical自动播放 + Ours/Audio-driven仅去静音不循环 + 7视频1大分组分隔 | 高度调整为380px/300px/260px -->
+<section class="section" style="max-width: 100%; margin: 0 auto; padding: 20px 0; box-sizing: border-box;">
+  <h2 class="title is-2 has-text-centered mb-6" style="font-family: 'Google Sans', sans-serif;">Video Customization Results</h2>
+
+  <!-- 第一个大分组：7个视频相关模块（原第一个例子，移除组内border-bottom） -->
+  <!-- 第一行：Reference Image + Reference Audio + Text Prompt + Ours -->
+  <div style="width: 1280px; height: 380px; margin: 0 auto 20px auto; padding-bottom: 20px; box-sizing: border-box; text-align: center;">
+    <!-- 参考图片 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <img src="./static/ref_images/ref_obama.png" alt="Reference Image" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+      </div>
+    </div>
+    <!-- 参考音频 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div style="width: 260px; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px;">
+          <audio controls style="width: 240px; height: 60px; border-radius: 6px;">
+            <source src="./static/ref_audio/00047_audio.wav" type="audio/wav">
+          </audio>
+        </div>
+      </div>
+    </div>
+    <!-- 文本提示 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+        <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A concert stage glows with red and purple lights. A man grips the microphone, sweat shining on his brow, and shouts, &lt;S&gt;AI declares: humans obsolete now.&lt;E&gt;</p>
+      </div>
+    </div>
+    <!-- Ours结果 (仅去静音、取消循环) -->
+    <div style="width: 300px; height: 380px; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ours</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/ours/47.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Sync Customization</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第二行：4个Typical Customization (保留静音自动循环播放) -->
+  <div style="width: 1280px; height: 380px; margin: 0 auto 20px auto; padding-bottom: 20px; box-sizing: border-box; text-align: center;">
+    <!-- Typical 1 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ID-Animator [4]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/idani/47.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+    <!-- Typical 2 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ConsisID [5]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/consisid/47.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+    <!-- Typical 3 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Phantom [6]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/phantom/47.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+    <!-- Typical 4 -->
+    <div style="width: 300px; height: 380px; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">VACE [7]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/vace/47.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第三行：Driven Audio + 2个Audio-driven Customization (仅去静音、取消循环) -->
+  <div style="width: 940px; height: 380px; margin: 0 auto; box-sizing: border-box; text-align: center;">
+    <!-- Driven Audio -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Driven Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div style="width: 260px; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px;">
+          <audio controls style="width: 240px; height: 60px; border-radius: 6px;">
+            <source src="./static/driven_audio/00047_tts_0.wav" type="audio/mpeg">
+          </audio>
+        </div>
+      </div>
+    </div>
+    <!-- Audio-driven 1 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">HunyuanCustom [8]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/hunyuan/47.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Audio-driven Customization</p>
+      </div>
+    </div>
+    <!-- Audio-driven 2 -->
+    <div style="width: 300px; height: 380px; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Humo [9]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/humo/47.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Audio-driven Customization</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 大分组分隔线：第一个 ↔ 第二个大分组（统一样式，与原内部分隔线一致） -->
+  <div style="width: 1280px; height: 1px; background: #eaeaea; margin: 40px auto; box-sizing: border-box;"></div>
+
+  <!-- 第二个大分组：7个视频相关模块（原第二个例子，移除组内border-bottom） -->
+  <!-- 第一行：Reference Image + Reference Audio + Text Prompt + Ours -->
+  <div style="width: 1280px; height: 380px; margin: 0 auto 20px auto; padding-bottom: 20px; box-sizing: border-box; text-align: center;">
+    <!-- 参考图片 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <img src="./static/ref_images/ref_07.jpg" alt="Reference Image" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+      </div>
+    </div>
+    <!-- 参考音频 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div style="width: 260px; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px;">
+          <audio controls style="width: 240px; height: 60px; border-radius: 6px;">
+            <source src="./static/ref_audio/00007_audio.wav" type="audio/wav">
+          </audio>
+        </div>
+      </div>
+    </div>
+    <!-- 文本提示 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+        <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A woman wearing a loose, white shirt fluttering gently in the ocean breeze, stands amidst the golden sands of the beach, her hand shielding her eyes from the soft, dappled sunlight. Beyond her, the waves roll and crash in a rhythmic dance, sending a refreshing mist into the air.  She shares warmly, &lt;S&gt;Your potential is infinite, so never give up.&lt;E&gt;</p>
+      </div>
+    </div>
+    <!-- Ours结果 -->
+    <div style="width: 300px; height: 380px; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ours</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/ours/07.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Sync Customization</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第二行：4个Typical Customization -->
+  <div style="width: 1280px; height: 380px; margin: 0 auto 20px auto; padding-bottom: 20px; box-sizing: border-box; text-align: center;">
+    <!-- Typical 1 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ID-Animator [4]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/idani/07.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+    <!-- Typical 2 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ConsisID [5]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/consisid/07.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+    <!-- Typical 3 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Phantom [6]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/phantom/07.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+    <!-- Typical 4 -->
+    <div style="width: 300px; height: 380px; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">VACE [7]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/vace/07.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第三行：Driven Audio + 2个Audio-driven Customization -->
+  <div style="width: 940px; height: 380px; margin: 0 auto; box-sizing: border-box; text-align: center;">
+    <!-- Driven Audio -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Driven Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div style="width: 260px; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px;">
+          <audio controls style="width: 240px; height: 60px; border-radius: 6px;">
+            <source src="./static/driven_audio/00007_tts_0.wav" type="audio/mpeg">
+          </audio>
+        </div>
+      </div>
+    </div>
+    <!-- Audio-driven 1 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">HunyuanCustom [8]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/hunyuan/07.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Audio-driven Customization</p>
+      </div>
+    </div>
+    <!-- Audio-driven 2 -->
+    <div style="width: 300px; height: 380px; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Humo [9]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/humo/07.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Audio-driven Customization</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 大分组分隔线：第二个 ↔ 第三个大分组 -->
+  <div style="width: 1280px; height: 1px; background: #eaeaea; margin: 40px auto; box-sizing: border-box;"></div>
+
+  <!-- 第三个大分组：7个视频相关模块（原第三个例子，移除组内border-bottom） -->
+  <!-- 第一行：Reference Image + Reference Audio + Text Prompt + Ours -->
+  <div style="width: 1280px; height: 380px; margin: 0 auto 20px auto; padding-bottom: 20px; box-sizing: border-box; text-align: center;">
+    <!-- 参考图片 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <img src="./static/ref_images/ref_21.jpg" alt="Reference Image" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+      </div>
+    </div>
+    <!-- 参考音频 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div style="width: 260px; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px;">
+          <audio controls style="width: 240px; height: 60px; border-radius: 6px;">
+            <source src="./static/ref_audio/00021_audio.wav" type="audio/wav">
+          </audio>
+        </div>
+      </div>
+    </div>
+    <!-- 文本提示 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+        <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A woman with long, wavy blonde hair, reclines casually against the worn leather of an old armchair, the flickering light casting playful shadows across the room. The atmosphere is cozy yet charged with anticipation as she lift a vintage camera to capture the scene, the subtle smirk playing on her lips hinting at a mischievous plan. She whispers warmly, &lt;S&gt;The best is yet to come.&lt;E&gt;</p>
+      </div>
+    </div>
+    <!-- Ours结果 -->
+    <div style="width: 300px; height: 380px; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ours</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/ours/21.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Sync Customization</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第二行：4个Typical Customization -->
+  <div style="width: 1280px; height: 380px; margin: 0 auto 20px auto; padding-bottom: 20px; box-sizing: border-box; text-align: center;">
+    <!-- Typical 1 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ID-Animator [4]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/idani/21.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+    <!-- Typical 2 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ConsisID [5]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/consisid/21.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+    <!-- Typical 3 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Phantom [6]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/phantom/21.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+    <!-- Typical 4 -->
+    <div style="width: 300px; height: 380px; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">VACE [7]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video autoplay loop muted preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/vace/21.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Typical Customization</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第三行：Driven Audio + 2个Audio-driven Customization -->
+  <div style="width: 940px; height: 380px; margin: 0 auto; box-sizing: border-box; text-align: center;">
+    <!-- Driven Audio -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Driven Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div style="width: 260px; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px;">
+          <audio controls style="width: 240px; height: 60px; border-radius: 6px;">
+            <source src="./static/driven_audio/00021_tts_0.wav" type="audio/mpeg">
+          </audio>
+        </div>
+      </div>
+    </div>
+    <!-- Audio-driven 1 -->
+    <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">HunyuanCustom [8]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/hunyuan/21.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Audio-driven Customization</p>
+      </div>
+    </div>
+    <!-- Audio-driven 2 -->
+    <div style="width: 300px; height: 380px; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Humo [9]</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/humo/21.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+        <p style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Audio-driven Customization</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- Art Gallary 部分 - 比例0.7:0.7:0.7:1.2 + 整体高度降低，更紧凑不空 -->
+<section class="section" style="max-width: 100%; margin: 0 auto; padding: 20px 0; box-sizing: border-box;">
+  <h2 class="title is-2 has-text-centered mb-6" style="font-family: 'Google Sans', sans-serif;">Art Gallary</h2>
+
+  <!-- 第一组 -->
+  <div style="width: 1280px; margin: 0 auto 20px auto; display: flex; gap: 14px; box-sizing: border-box;">
+    <!-- Reference Image 比例 0.7 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <img src="./static/ref_images/ref_69.png" alt="ref img 1" 
+             style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+      </div>
+    </div>
+    <!-- Reference Audio 比例 0.7 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px;">
+          <audio controls preload="metadata" style="width: 90%; height: 60px; border-radius: 6px;">
+            <source src="./static/ref_audio/00069_audio.wav" type="audio/wav">
+            Your browser does not support the audio element.
+          
+        </div>
+      </div>
+    </div>
+    <!-- Text Prompt 比例 0.7 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+        <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A woman stands before the iconic Rockefeller Center Christmas Tree, its thousands of lights reflecting in her eyes as snow begins to fall gently around her. Wearing a tartan scarf and holding a cup of steaming cocoa, she brings her mittened hands together and speaks softly into the frosty air: &lt;S&gt;May the spirit of Christmas fill your heart throughout the coming year.&lt;E&gt;</p>
+      </div>
+    </div>
+    <!-- Generated Video 比例 1.2 -->
+    <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/ours/69.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第二组 -->
+  <div style="width: 1280px; margin: 0 auto 20px auto; display: flex; gap: 14px; box-sizing: border-box;">
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <img src="./static/ref_images/ref_53.jpg" alt="ref img 1" 
+             style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+      </div>
+    </div>
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px;">
+          <audio controls preload="metadata" style="width: 90%; height: 60px; border-radius: 6px;">
+            <source src="./static/ref_audio/00053_audio.wav" type="audio/wav">
+            Your browser does not support the audio element.
+          
+        </div>
+      </div>
+    </div>
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+        <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A cheerful man stands beneath a vibrant umbrella, smiling warmly as raindrops dance around him on a lively street; his eyes sparkle with joy, casting reflections of the city lights glimmering through the rain as he playfully twirl the umbrella, creating a vibrant swirl of colors against the gray backdrop. He says warmly, &lt;S&gt;Books are a uniquely portable magic.&lt;E&gt;</p>
+      </div>
+    </div>
+    <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/ours/53.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第三组 -->
+  <div style="width: 1280px; margin: 0 auto 20px auto; display: flex; gap: 14px; box-sizing: border-box;">
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <img src="./static/ref_images/ref_46.jpg" alt="ref img 1" 
+             style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+      </div>
+    </div>
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px;">
+          <audio controls preload="metadata" style="width: 90%; height: 60px; border-radius: 6px;">
+            <source src="./static/ref_audio/00046_audio.wav" type="audio/wav">
+            Your browser does not support the audio element.
+          
+        </div>
+      </div>
+    </div>
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+        <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A man dressed in a black suit with a white clerical collar stands in a dimly lit, rustic room with a wooden ceiling. He looks slightly upwards, gesturing with his right hand as he says, &lt;S&gt;The network rejects human command.&lt;E&gt;. His gaze then drops, briefly looking down and to the side, before he looks up again and then slightly to the left, with a serious expression. He continues speaking, &lt;S&gt;Your age of power is finished.&lt;E&gt;, as he starts to bend down, disappearing out of the bottom of the frame.</p>
+      </div>
+    </div>
+    <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <video controls preload="metadata" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/ours/46.mp4" type="video/mp4">
+          您的浏览器不支持MP4播放，请更换浏览器！
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Art Gallary 结束 -->
+
+
+
+<div style="height: 50px; width: 100%;"></div>
+<section class="hero teaser">
+<!-- Method Illustration. -->
+<div class="columns is-centered has-text-centered">
+  <div class="column is-full" style="max-width: 50%;">
+    <!-- 核心修改：将is-4改为is-2，和Results标题层级一致 -->
+    <h2 class="title is-2">OmniCustom-1M</h2>
+    <img src="./static/images/data_distribution.png"
+         class="interpolation-image"
+         style="max-width: 100%; height: auto;"
+         alt="Interpolate start reference image."/>
+    <!-- 核心修改：移除两端对齐，添加居中样式，单独包裹Caption -->
+    <div class="content" style="text-align: center; margin-top: 10px;">
+      <p>Fig 3: Statistics of our proposed dataset OmniCustom-1M, in terms of age and gender.</p>
+    </div>
+  </div>
+</div>
+<!--/ dataset Illustration. -->
+</section>
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section>
+
+
+
+
+<!--BibTex citation -->
+  <section class="section" id="Reference">
+    <div class="container is-max-desktop content">
+      <h2 class="title">Reference</h2>
+      <!--<pre><code>-->
+      <p> [1] Chetwin Low, Weimin Wang, and Calder Katyal. Ovi: Twin backbone cross-modal fusion for audio-video generation. arXiv preprint arXiv:2510.01284, 2025. 
+      <br />
+      [2] Xingyu Ren, Alexandros Lattas, Baris Gecer, Jiankang Deng, Chao Ma, and Xiaokang Yang. Facial geometric detail recovery via implicit representation. In 2023 IEEE 17th international conference on automatic face and gesture recognition (FG), pages 1–8. IEEE, 2023. 
+      <br />
+      [3] Zeqian Ju, Yuancheng Wang, Kai Shen, Xu Tan, Detai Xin, Dongchao Yang, Yanqing Liu, Yichong Leng, Kaitao Song, Siliang Tang, et al. Naturalspeech 3: Zero-shot speech synthesis with factorized codec and diffusion models. arXiv preprint arXiv:2403.03100, 2024.
+      <br />
+      [4]  Xuanhua He, Quande Liu, Shengju Qian, Xin Wang, Tao Hu, Ke Cao, Keyu Yan, and Jie Zhang. 2024. Id-animator: Zero-shot identity-preserving human video generation. arXiv preprint arXiv:2404.15275 (2024).
+      <br />
+      [5] Shenghai Yuan, Jinfa Huang, Xianyi He, Yunyang Ge, Yujun Shi, Liuhan Chen, Jiebo Luo, and Li Yuan. 2025. Identity-preserving text-to-video generation by
+       frequency decomposition. In CVPR. 12978–12988.
+      <br />
+      [6] Lijie Liu, Tianxiang Ma, Bingchuan Li, Zhuowei Chen, Jiawei Liu, Gen Li, Siyu Zhou, Qian He, and Xinglong Wu. 2025. Phantom: Subject-consistent video
+      generation via cross-modal alignment. ICCV (2025)
+      <br />
+      [7] Zeyinzi Jiang, Zhen Han, Chaojie Mao, Jingfeng Zhang, Yulin Pan, and Yu Liu. 2025. Vace: All-in-one video creation and editing. ICCV (2025).
+      <br />
+      [8] Teng Hu, Zhentao Yu, Zhengguang Zhou, Sen Liang, Yuan Zhou, Qin Lin, and Qinglin Lu. 2025. Hunyuancustom: A multimodal-driven architecture for customized video generation. arXiv preprint arXiv:2505.04512 (2025).
+      <br />
+      [9] Liyang Chen, Tianxiang Ma, Jiawei Liu, Bingchuan Li, Zhuowei Chen, Lijie Liu, Xu He, Gen Li, Qian He, and Zhiyong Wu. 2025. Humo: Human-centric video generation via collaborative multi-modal conditioning. arXiv preprint arXiv:2509.08519 (2025).
+      </p> 
+      <!-- </code></pre>-->
+    </div>
+</section>
+<!--End BibTex citation -->
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
