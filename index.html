@@ -209,139 +209,127 @@
           Fig 1: We propose OmniCustom, a novel framework to deal with sync audio-video customization. Given a reference image $I^{r}$ and a reference audio $A^{r}$, the framework synchronously generates a video that preserves the visual identity from $I^{r}$ and an audio track that mimics the timbre of $A^{r}$. Here, the speech content can be freely specified through a textual prompt, where we use &lt;S&gt; and &lt;E&gt; to mark the start and end of a speech.
         </p>
       </h2>
-
-      <!-- 四元素一行展示区 - 完全适配Art Gallery样式：flex布局+380px高度+0.7:0.7:0.7:1.2比例 -->
-      <div style="width: 100%; margin: 0 auto; padding: 10px 0; box-sizing: border-box;">
-        <!-- 第一组示例 -->
-        <div style="width: 100%; max-width: 1280px; margin: 0 auto 30px auto; display: flex; gap: 14px; box-sizing: border-box;">
-          <!-- 1. 参考图像 -->
-          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
-              <img src="./static/ref_images/teaser_ref1.png" alt="ref img 1" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">
-            </div>
-          </div>
-
-          <!-- 2. 参考音频 -->
-          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
-              <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px; box-sizing: border-box;">
-                <audio controls style="width: 90%; height: 60px; border-radius: 6px;">
-                  <source src="./static/ref_audio/00029_audio.wav" type="audio/wav">
-                  Your browser does not support the audio element.
-                </audio>
-              </div>
-            </div>
-          </div>
-
-          <!-- 3. 文本提示 -->
-          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
-              <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A man with an air of intellect holds a book close, examining the pages under the warm glow of a rustic library lamp. The ambient light casts gentle shadows across his focused expression, while a tranquil, scholarly atmosphere envelops the room. Occasionally, he pause to jot down notes in the margins, further immersing himself in the text's rich narratives. He declares warmly, &lt;S&gt;Learning never exhausts the mind.&lt;E&gt;</p>
-            </div>
-          </div>
-
-          <!-- 4. 结果视频 - 保留controls playsinline，无muted -->
-          <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
-              <video controls playsinline style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
-                <source src="./static/videos/teaser1.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
-        </div>
-        <!-- 第一组结束 -->
-
-        <!-- 第2组开始 -->
-        <div style="width: 100%; max-width: 1280px; margin: 0 auto 30px auto; display: flex; gap: 14px; box-sizing: border-box;">
-          <!-- 1. 参考图像 -->
-          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
-              <img src="./static/ref_images/teaser_ref2.jpg" alt="ref img 1" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">
-            </div>
-          </div>
-
-          <!-- 2. 参考音频 -->
-          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
-              <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px; box-sizing: border-box;">
-                <audio controls style="width: 90%; height: 60px; border-radius: 6px;">
-                  <source src="./static/ref_audio/00058_audio.wav" type="audio/wav">
-                  Your browser does not support the audio element.
-                </audio>
-              </div>
-            </div>
-          </div>
-
-          <!-- 3. 文本提示 -->
-          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
-              <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A woman stands on the harbour’s edge at twilight, the sails of the Sydney Opera House catching the last apricot glow of sunset. She wears a simple black dress, her hair swept up, and holds a half-finished glass of champagne. The lights of the Harbour Bridge begin to sparkle behind her, and the opera house seems to float on the darkening water, she syas, &lt;S&gt;Some buildings aren't made of stone, but of gathered breath and gathered dreams.&lt;E&gt;</p>
-            </div>
-          </div>
-
-          <!-- 4. 结果视频 -->
-          <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
-              <video controls playsinline style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
-                <source src="./static/videos/teaser2.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
-        </div>
-        <!-- 第二组结束 -->
-
-        <!-- 第三组开始 -->
-        <div style="width: 100%; max-width: 1280px; margin: 0 auto; display: flex; gap: 14px; box-sizing: border-box;">
-          <!-- 1. 参考图像 -->
-          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
-              <img src="./static/ref_images/teaser_ref3.png" alt="ref img 1" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">
-            </div>
-          </div>
-
-          <!-- 2. 参考音频 -->
-          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
-              <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px; box-sizing: border-box;">
-                <audio controls style="width: 90%; height: 60px; border-radius: 6px;">
-                  <source src="./static/ref_audio/00070_audio.wav" type="audio/wav">
-                  Your browser does not support the audio element.
-                </audio>
-              </div>
-            </div>
-          </div>
-
-          <!-- 3. 文本提示 -->
-          <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
-              <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A man stands on a bustling street in Shanghai, the air thick with the festive atmosphere of Chinese Lunar New Year, with numerous red lanterns hanging in clusters overhead. He blends seamlessly into the vibrant surroundings, then clasps his hands together in a traditional gesture of greeting and says warmly: &lt;S&gt;Wishing everyone a Happy New Year and joy every single day.&lt;E&gt;</p>
-            </div>
-          </div>
-
-          <!-- 4. 结果视频 -->
-          <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
-            <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
-            <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
-              <video controls playsinline style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
-                <source src="./static/videos/teaser3.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
-        </div>
-        <!-- 第三组结束 -->
+<!-- 四元素一行展示区 - 修复Text Prompt前方文字截断问题 -->
+<div style="width: 100%; margin: 0 auto; padding: 10px 0; box-sizing: border-box;">
+  <!-- 第一组示例 -->
+  <div style="width: 100%; max-width: 1280px; margin: 0 auto 30px auto; display: flex; gap: 14px; box-sizing: border-box;">
+    <!-- 1. 参考图像 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <img src="./static/ref_images/teaser_ref1.png" alt="ref img 1" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">
       </div>
-      <!-- 四元素一行展示区结束 -->
+    </div>
+    <!-- 2. 参考音频 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px; box-sizing: border-box;">
+          <audio controls style="width: 90%; height: 60px; border-radius: 6px;">
+            <source src="./static/ref_audio/00029_audio.wav" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </div>
+    <!-- 3. 文本提示 - 修复截断 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
+        <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A man with an air of intellect holds a book close, examining the pages under the warm glow of a rustic library lamp. The ambient light casts gentle shadows across his focused expression, while a tranquil, scholarly atmosphere envelops the room. Occasionally, he pause to jot down notes in the margins, further immersing himself in the text's rich narratives. He declares warmly, &lt;S&gt;Learning never exhausts the mind.&lt;E&gt;</p>
+      </div>
+    </div>
+    <!-- 4. 结果视频 -->
+    <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <video controls playsinline style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/teaser1.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+  <!-- 第二组示例 -->
+  <div style="width: 100%; max-width: 1280px; margin: 0 auto 30px auto; display: flex; gap: 14px; box-sizing: border-box;">
+    <!-- 1. 参考图像 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <img src="./static/ref_images/teaser_ref2.jpg" alt="ref img 2" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">
+      </div>
+    </div>
+    <!-- 2. 参考音频 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px; box-sizing: border-box;">
+          <audio controls style="width: 90%; height: 60px; border-radius: 6px;">
+            <source src="./static/ref_audio/00058_audio.wav" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </div>
+    <!-- 3. 文本提示 - 修复截断 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
+        <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A woman stands on the harbour’s edge at twilight, the sails of the Sydney Opera House catching the last apricot glow of sunset. She wears a simple black dress, her hair swept up, and holds a half-finished glass of champagne. The lights of the Harbour Bridge begin to sparkle behind her, and the opera house seems to float on the darkening water, she says, &lt;S&gt;Some buildings aren't made of stone, but of gathered breath and gathered dreams.&lt;E&gt;</p>
+      </div>
+    </div>
+    <!-- 4. 结果视频 -->
+    <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <video controls playsinline style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/teaser2.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+  <!-- 第三组示例 -->
+  <div style="width: 100%; max-width: 1280px; margin: 0 auto; display: flex; gap: 14px; box-sizing: border-box;">
+    <!-- 1. 参考图像 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <img src="./static/ref_images/teaser_ref3.png" alt="ref img 3" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px;">
+      </div>
+    </div>
+    <!-- 2. 参考音频 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <div style="width: 100%; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px; box-sizing: border-box;">
+          <audio controls style="width: 90%; height: 60px; border-radius: 6px;">
+            <source src="./static/ref_audio/00070_audio.wav" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </div>
+    </div>
+    <!-- 3. 文本提示 - 修复截断 -->
+    <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
+        <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A man stands on a bustling street in Shanghai, the air thick with the festive atmosphere of Chinese Lunar New Year, with numerous red lanterns hanging in clusters overhead. He blends seamlessly into the vibrant surroundings, then clasps his hands together in a traditional gesture of greeting and says warmly: &lt;S&gt;Wishing everyone a Happy New Year and joy every single day.&lt;E&gt;</p>
+      </div>
+    </div>
+    <!-- 4. 结果视频 -->
+    <div style="flex: 1.2; height: 380px; text-align: center; box-sizing: border-box;">
+      <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video</h4>
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+        <video controls playsinline style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+          <source src="./static/videos/teaser3.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 
     </div>
     <!-- hero-body 结束 -->
@@ -656,6 +644,16 @@
   <!-- 大分组分隔线：第二个 ↔ 第三个大分组 -->
   <div style="width: 1280px; height: 1px; background: #eaeaea; margin: 40px auto; box-sizing: border-box;"></div>
 
+<!-- 分组功能说明条 - 放在【第三个大分组】第一行之前 -->
+<div style="width: 1280px; margin: 0 auto 20px auto; padding: 14px 20px;
+            background: #fafafa; border: 1px solid #eee; border-radius: 8px;
+            box-sizing: border-box; text-align: center;">
+  <p style="margin:0; font-size:15px; line-height:1.6; color:#444;
+            font-family:'Google Sans','Noto Sans',sans-serif;">
+    <strong>Our OmniCustom can generate background sounds corresponding to given text prompt, e.g., ocean waves, while existing customization methods cannot.  
+</strong> 
+  </p>
+</div>
 
     <!-- 第三个大分组：7个视频相关模块（原第二个例子，移除组内border-bottom） -->
   <!-- 第一行：Reference Image + Reference Audio + Text Prompt + Ours -->
@@ -786,6 +784,17 @@
   <!-- 大分组分隔线：第三个 ↔ 第四个大分组 -->
   <div style="width: 1280px; height: 1px; background: #eaeaea; margin: 40px auto; box-sizing: border-box;"></div>
 
+  <!-- 分组功能说明条 - 放在【第三个大分组】第一行之前 -->
+<div style="width: 1280px; margin: 0 auto 20px auto; padding: 14px 20px;
+            background: #fafafa; border: 1px solid #eee; border-radius: 8px;
+            box-sizing: border-box; text-align: center;">
+  <p style="margin:0; font-size:15px; line-height:1.6; color:#444;
+            font-family:'Google Sans','Noto Sans',sans-serif;">
+    <strong>Our OmniCustom can generate background music similar to that of the reference audio, whereas existing customization methods cannot.  
+</strong> 
+  </p>
+</div>
+
   <!-- 第四个大分组：7个视频相关模块（原第三个例子，移除组内border-bottom） -->
   <!-- 第一行：Reference Image + Reference Audio + Text Prompt + Ours -->
   <div style="width: 1280px; height: 380px; margin: 0 auto 20px auto; padding-bottom: 20px; box-sizing: border-box; text-align: center;">
@@ -912,6 +921,16 @@
     </div>
   </div>
 </section>
+  <div style="width: 1280px; height: 1px; background: #eaeaea; margin: 40px auto; box-sizing: border-box;"></div>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -946,7 +965,7 @@
     <!-- Text Prompt 比例 0.7 -->
     <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
       <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
         <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A woman stands before the iconic Rockefeller Center Christmas Tree, its thousands of lights reflecting in her eyes as snow begins to fall gently around her. Wearing a tartan scarf and holding a cup of steaming cocoa, she brings her mittened hands together and speaks softly into the frosty air: &lt;S&gt;May the spirit of Christmas fill your heart throughout the coming year.&lt;E&gt;</p>
       </div>
     </div>
@@ -984,7 +1003,7 @@
     </div>
     <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
       <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+   <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
         <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A cheerful man stands beneath a vibrant umbrella, smiling warmly as raindrops dance around him on a lively street; his eyes sparkle with joy, casting reflections of the city lights glimmering through the rain as he playfully twirl the umbrella, creating a vibrant swirl of colors against the gray backdrop. He says warmly, &lt;S&gt;Books are a uniquely portable magic.&lt;E&gt;</p>
       </div>
     </div>
@@ -1021,7 +1040,7 @@
     </div>
     <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
       <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+  <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
         <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A man dressed in a black suit with a white clerical collar stands in a dimly lit, rustic room with a wooden ceiling. He looks slightly upwards, gesturing with his right hand as he says, &lt;S&gt;The network rejects human command.&lt;E&gt;. His gaze then drops, briefly looking down and to the side, before he looks up again and then slightly to the left, with a serious expression. He continues speaking, &lt;S&gt;Your age of power is finished.&lt;E&gt;, as he starts to bend down, disappearing out of the bottom of the frame.</p>
       </div>
     </div>
@@ -1059,7 +1078,7 @@
     </div>
     <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
       <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+  <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
         <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A man, wearing a vibrant hiking outfit, stands confidently with a mountain range in the background, gazing directly at the camera. Sunlight casts dynamic shadows across the rugged terrain, highlighting the subject's determined expression. A gentle breeze tousles his hair as an eagle soars overhead, adding a sense of adventure to the scene. He shares warmly, &lt;S&gt;Curiosity is the wick in the candle of learning.&lt;E&gt;
           </p>
       </div>
@@ -1097,7 +1116,7 @@
     </div>
     <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
       <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+     <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
         <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A woman in a cream-colored trench coat stands beneath the iron lattice of the Eiffel Tower at dusk. The structure’s golden lights begin to flicker against the indigo sky. She holds a small sketchbook loosely in one hand. The evening breeze stirs the ends of her silk scarf, and the distant murmur of Parisian traffic feels like a lullaby. She whispers to the rising moon, &lt;S&gt;Some structures don’t just touch the sky—they teach it how to glow.&lt;E&gt;
           </p>
       </div>
@@ -1135,7 +1154,7 @@
     </div>
     <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
       <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+     <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
         <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A woman with long blonde hair, stands beneath the golden autumn trees, the vibrant colors of her scarf and cozy sweater casting warm shadows across her face as she gather fallen leaves, the gentle breeze playfully tugging at her attire, creating an atmosphere of serene joy in the dappled sunlight. She shares warmly, &lt;S&gt;Movement is a medicine for creating change.&lt;E&gt;
     </p>
       </div>
@@ -1173,7 +1192,7 @@
     </div>
     <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
       <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+     <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
         <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">A woman, at a quaint garden, watches the delicate flutter of butterflies among the rose bushes. She muses softly, &lt;S&gt;Stillness is where inspiration learns to breathe.&lt;E&gt;
         </p>
       </div>
@@ -1211,7 +1230,7 @@
     </div>
     <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
       <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+    <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
         <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">
         A scientist in a stained lab coat stands amidst overturned equipment in a sterile but damaged laboratory. She looks toward a shattered observation window, raising a data slate as she says, &lt;S&gt;The experiment observed its observers, your hypothesis has been invalidated.&lt;E&gt;
         </p>
@@ -1251,7 +1270,7 @@
     </div>
     <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
       <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+    <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
         <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">
           A man sits comfortably in a cozy armchair by the window, bathed in the warm glow of the afternoon sun, flipping pages of an intriguing novel. As he absorb the story, a gentle breeze ruffles him, prompting him to glance up with a radiant smile. his fingers absentmindedly play with the corner of the page, casting playful shadows on the book's cover, as the tranquil atmosphere invites a moment of peaceful reflection. He shares warmly, &lt;S&gt;Reading gives us someplace to go when we have to stay where we are.&lt;E&gt;
         </p>
@@ -1290,7 +1309,7 @@
     </div>
     <div style="flex: 0.7; height: 380px; text-align: center; box-sizing: border-box;">
       <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt</h4>
-      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+      <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 20px 15px; box-sizing: border-box; overflow-y: auto; text-align: left;">
         <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;"> A lively man eagerly explores the vibrant outdoor festival, weaving through the bustling crowd as sunlight dances off colorful vendor tents, capturing the joyous atmosphere on a vintage camera, and occasionally pausing to savor the aroma of street food. He says warmly, &lt;S&gt;Color is my day-long obsession, joy, and torment.&lt;E&gt;
        </p>
       </div>
@@ -1402,3 +1421,4 @@
 
 </body>
 </html>
+
