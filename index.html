@@ -955,6 +955,104 @@
 
 
 
+<!-- ================================================= -->
+<!-- 修改后的段落：第一行参考图片+参考音频，第二行四个卡片（prompt1 + 结果1 + prompt2 + 结果2） -->
+<!-- 放置在文件末尾，所有内容之后 -->
+<!-- ================================================= -->
+
+<!-- 分组功能说明条 -->
+<div style="width: 1280px; margin: 0 auto 20px auto; padding: 14px 20px;
+            background: #fafafa; border: 1px solid #eee; border-radius: 8px;
+            box-sizing: border-box; text-align: center;">
+  <p style="margin:0; font-size:15px; line-height:1.6; color:#444;
+            font-family:'Google Sans','Noto Sans',sans-serif;">
+    <strong> When the reference audio is pure music, our OmniCustom can imitate the timbre of musical instruments, while existing customization methods cannot.  
+</strong> 
+  </p>
+</div>
+
+<!-- 第一行：参考图片 + 参考音频 -->
+<div style="width: 1280px; margin: 0 auto 30px auto; text-align: center; box-sizing: border-box;">
+  <!-- 参考图片卡片 -->
+  <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+    <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Image</h4>
+    <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+      <img src="./static/ref_images/ref_21.jpg" alt="Reference Image" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+    </div>
+  </div>
+  <!-- 参考音频卡片 -->
+  <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+    <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Reference Audio (Pure Music)</h4>
+    <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+      <div style="width: 260px; height: 260px; display: flex; justify-content: center; align-items: center; background: #f0f0f0; border-radius: 6px;">
+        <audio controls style="width: 240px; height: 60px; border-radius: 6px;">
+          <source src="./static/ref_audio/music3.wav" type="audio/wav">
+          您的浏览器不支持 audio 元素。
+        </audio>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第二行：四个卡片 - prompt1 + 结果1 + prompt2 + 结果2 -->
+<div style="width: 1280px; margin: 0 auto; text-align: center; box-sizing: border-box;">
+  <!-- Text Prompt 1 卡片 -->
+  <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+    <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt 1</h4>
+    <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+      <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">
+       A woman with long, wavy blonde hair, reclines casually against the worn leather of an old armchair, the flickering light casting playful shadows across the room. The atmosphere is cozy yet charged with anticipation as she lift a vintage camera to capture the scene, the subtle smirk playing on her lips hinting at a mischievous plan. She whispers warmly, &lt;S&gt;The best is yet to come.&lt;E&gt;
+      </p>
+    </div>
+  </div>
+  
+<!-- Result 1 卡片 -->
+<div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+  <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video 1</h4>
+  <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+      <source src="./static/videos/ours/21_wse_music.mp4" type="video/mp4">
+    </video>
+    <!-- 修改后的文字部分：移除white-space: nowrap，使用div实现多行 -->
+    <div style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 60px; text-align: center; line-height: 1.4;">
+      <div>Customized ID</div>
+      <div>Uncustomized ID timbre</div>
+      <div>Similar Music Timbre</div>
+    </div>
+  </div>
+</div>
+
+  <!-- Text Prompt 2 卡片 -->
+  <div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+    <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Text Prompt 2</h4>
+    <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+      <p style="font-size: 14px; line-height: 1.5; color: #444; margin: 0; font-family: 'Noto Sans', sans-serif;">
+        A woman with long, wavy blonde hair, reclines casually against the worn leather of an old armchair, the flickering light casting playful shadows across the room. The atmosphere is cozy yet charged with anticipation as she lift a vintage camera to capture the scene, the subtle smirk playing on her lips hinting at a mischievous plan.
+      </p>
+    </div>
+  </div>
+  
+  <!-- Result 2 卡片 -->
+<div style="width: 300px; height: 380px; margin: 0 10px 0 0; display: inline-block; text-align: center; vertical-align: top; box-sizing: border-box;">
+  <h4 style="height: 50px; line-height: 50px; margin: 0 0 10px 0; font-size: 18px; font-family: 'Google Sans', sans-serif; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Generated Video 1</h4>
+  <div style="width: 100%; height: 300px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <video controls preload="metadata" style="width: 100%; height: 100%; max-width: 260px; max-height: 240px; object-fit: contain; border-radius: 6px; background: #f0f0f0;">
+      <source src="./static/videos/ours/21_wose_music.mp4" type="video/mp4">
+    </video>
+    <!-- 修改后的文字部分：移除white-space: nowrap，使用div实现多行 -->
+    <div style="font-size: 14px; color: #666; font-style: italic; margin-top: 10px; height: 60px; text-align: center; line-height: 1.4;">
+      <div>Customized ID</div>
+      <div>Similar Music Timbre</div>
+    </div>
+  </div>
+</div>
+<!-- ================================================= -->
+<!-- 修改后的段落结束 -->
+<!-- ================================================= -->
+<div style="width: 1280px; height: 1px; background: #eaeaea; margin: 40px auto; box-sizing: border-box;"></div>
+
+
+
 
 
 
@@ -1448,4 +1546,3 @@
 
 </body>
 </html>
-
